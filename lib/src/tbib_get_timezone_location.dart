@@ -1,10 +1,13 @@
+import 'dart:developer';
 import 'dart:io';
 
+import 'package:app_settings/app_settings.dart';
 import 'package:flutter/services.dart';
 import 'package:geocoding/geocoding.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:path/path.dart';
 import 'package:path_provider/path_provider.dart';
+import 'package:permission_handler/permission_handler.dart';
 import 'package:sqflite/sqflite.dart';
 import 'package:tbib_get_timezone_location/gen/assets.gen.dart';
 
@@ -24,6 +27,12 @@ class TbibGetTimezoneLocation {
   }
 
   Future<File> _createDatabase(String dbName) async {
+    if (!await Permission.storage.isGranted) {
+      await Permission.storage.request();
+    } else {
+      await AppSettings.openAppSettings(type: AppSettingsType.location);
+      exit(0);
+    }
     final documentsDirectory = await getApplicationDocumentsDirectory();
     final dbPath = join(documentsDirectory.path, 'assets', 'database', dbName);
 
@@ -58,7 +67,7 @@ class TbibGetTimezoneLocation {
   Future<String?> getTimezones() async {
     final offsetWithSeconds = DateTime.now().timeZoneOffset.inSeconds;
     final getUserCountry = await _getUserCountryCode();
-
+    log('getUserCountry: $getUserCountry');
     final db = await openDatabase(dbPath);
     final countryCodeResult = await db.query(
       'country',

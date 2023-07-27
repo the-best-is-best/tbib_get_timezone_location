@@ -1,6 +1,7 @@
 name: tbib_get_timezone_location
-description: Get timezone location from time offset user
+description: A new Flutter plugin project.
 version: 0.0.1
+homepage: https://github.com/the-best-is-best/tbib_get_timezone_location
 
 environment:
   sdk: ">=3.0.0 <4.0.0"
@@ -13,6 +14,7 @@ dev_dependencies:
   test: null
   very_good_analysis: ^5.0.0
 dependencies:
+  app_settings: ^5.0.0
   csv: ^5.0.2
   flutter:
     sdk: flutter
@@ -25,6 +27,14 @@ dependencies:
 flutter:
   assets:
     - assets/database/time_zone.db
+
+  plugin:
+    platforms:
+      android:
+        package: com.example.tbib_get_timezone_location
+        pluginClass: TbibGetTimezoneLocationPlugin
+      ios:
+        pluginClass: TbibGetTimezoneLocationPlugin
 
 flutter_gen:
   output: lib/gen/ # Optional (default: lib/gen/)
