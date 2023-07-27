@@ -1,4 +1,3 @@
-import 'dart:developer';
 import 'dart:io';
 
 import 'package:flutter/services.dart';
@@ -56,7 +55,7 @@ class TbibGetTimezoneLocation {
   }
 
   /// get timezone
-  Future<void> getTimezones() async {
+  Future<String?> getTimezones() async {
     final offsetWithSeconds = DateTime.now().timeZoneOffset.inSeconds;
     final getUserCountry = await _getUserCountryCode();
 
@@ -66,13 +65,12 @@ class TbibGetTimezoneLocation {
       where: 'country = ?',
       whereArgs: [getUserCountry],
     );
-    log('countryCodeResult: ${countryCodeResult.first['country_code']} - offset $offsetWithSeconds');
     final result = await db.query(
       'time_zone',
       where: 'country_code = ? AND gmt_offset = ?',
       whereArgs: [countryCodeResult.first['country_code'], offsetWithSeconds],
     );
     await db.close();
-    print(result.first['zone_name']);
+    return result.first['zone_name'] as String?;
   }
 }

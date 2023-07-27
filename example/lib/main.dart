@@ -1,10 +1,13 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:tbib_get_timezone_location/tbib_get_timezone_location.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await TbibGetTimezoneLocation().init();
-  TbibGetTimezoneLocation().getTimezones();
+  var timezoneName = await TbibGetTimezoneLocation().getTimezones();
+  log(timezoneName.toString());
   runApp(const MyApp());
 }
 
