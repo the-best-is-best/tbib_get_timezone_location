@@ -1,5 +1,5 @@
 name: tbib_get_timezone_location
-description: A new Flutter plugin project.
+description: Get timezone location from time offset user
 version: 0.0.1
 homepage: https://github.com/the-best-is-best/tbib_get_timezone_location
 
