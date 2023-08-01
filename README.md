@@ -8,7 +8,8 @@
  <p> Why this package created  </p>
  <p> created for get timezone from time offset and location because some devices not get timezone form internet so await FlutterTimezone.getLocalTimezone(); not working  </p>
 
- <h3> ios permission <h3>
+ <h3> ios permission </h3>
+
  ```plist
     <key>NSLocationWhenInUseUsageDescription</key>
     <string>$(PRODUCT_NAME) uses location to get your timezone.</string>

@@ -16,22 +16,24 @@ import 'package:tbib_get_timezone_location/gen/assets.gen.dart';
 /// {@endtemplate}
 class TbibGetTimezoneLocation {
   /// {@macro tbib_get_timezone_location}
-  static late String dbPath;
+  static String? dbPath;
 
   /// init database
   Future<void> init() async {
     final databaseFile =
         await _createDatabase(const $AssetsDatabaseGen().timeZone);
     // final database = await openDatabase(databaseFile.path);
-    dbPath = databaseFile.path;
+    dbPath = databaseFile?.path;
   }
 
-  Future<File> _createDatabase(String dbName) async {
-    if (!await Permission.storage.isGranted) {
+  Future<File?> _createDatabase(String dbName) async {
+    final permission = await Permission.storage.isGranted;
+    if (!permission) {
       await Permission.storage.request();
-    } else {
+    }
+    if (!permission) {
       await AppSettings.openAppSettings(type: AppSettingsType.location);
-      exit(0);
+      return null;
     }
     final documentsDirectory = await getApplicationDocumentsDirectory();
     final dbPath = join(documentsDirectory.path, 'assets', 'database', dbName);
@@ -55,7 +57,13 @@ class TbibGetTimezoneLocation {
   }
 
   Future<String?> _getUserCountryCode() async {
+    final permission = await Permission.location.isGranted;
+    log('permission: $permission');
+    if (!permission) {
+      return null;
+    }
     await Geolocator.requestPermission();
+
     final position = await Geolocator.getCurrentPosition();
     final placemarks =
         await placemarkFromCoordinates(position.latitude, position.longitude);
@@ -65,10 +73,20 @@ class TbibGetTimezoneLocation {
 
   /// get timezone
   Future<String?> getTimezones() async {
+    final permission = await Permission.storage.isGranted &&
+        await Permission.location.isGranted;
+
+    if (!permission || dbPath == null) {
+      return null;
+    }
+
+    if (dbPath == null) {
+      await init();
+    }
     final offsetWithSeconds = DateTime.now().timeZoneOffset.inSeconds;
     final getUserCountry = await _getUserCountryCode();
     log('getUserCountry: $getUserCountry');
-    final db = await openDatabase(dbPath);
+    final db = await openDatabase(dbPath!);
     final countryCodeResult = await db.query(
       'country',
       where: 'country = ?',
