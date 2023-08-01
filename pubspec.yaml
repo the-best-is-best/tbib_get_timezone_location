@@ -1,6 +1,6 @@
 name: tbib_get_timezone_location
 description: Get timezone location from time offset user
-version: 1.0.2
+version: 1.0.3
 homepage: https://github.com/the-best-is-best/tbib_get_timezone_location
 
 environment:

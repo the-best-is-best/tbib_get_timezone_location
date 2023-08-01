@@ -27,9 +27,15 @@ class TbibGetTimezoneLocation {
   }
 
   Future<File?> _createDatabase(String dbName) async {
-    final permission = await Permission.storage.isGranted;
+    var permission = await Permission.storage.isGranted;
     if (!permission) {
       await Permission.storage.request();
+    } else {
+      return null;
+    }
+    permission = await Permission.location.isGranted;
+    if (!permission) {
+      await Permission.location.request();
     }
     if (!permission) {
       await AppSettings.openAppSettings(type: AppSettingsType.location);
