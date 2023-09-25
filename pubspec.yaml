@@ -19,7 +19,7 @@ dependencies:
   flutter:
     sdk: flutter
   geocoding: ^2.1.0
-  geolocator: ^9.0.2
+  geolocator: ">=9.0.2 <11.0.0"
   path: ^1.8.3
   path_provider: ^2.0.15
   permission_handler: ^10.4.3
