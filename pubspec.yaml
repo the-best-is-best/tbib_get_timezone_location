@@ -22,7 +22,7 @@ dependencies:
   geolocator: ^9.0.2
   path: ^1.8.3
   path_provider: ^2.0.15
-  permission_handler: ^10.4.3
+  permission_handler: ">=10.4.3 <12.0.0"
   sqflite: ^2.2.8+4
   tbib_timezone_offset: 1.0.0
 flutter:
