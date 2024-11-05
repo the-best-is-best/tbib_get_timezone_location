@@ -1,6 +1,6 @@
 name: tbib_get_timezone_location
 description: Get timezone location from time offset user
-version: 1.1.0
+version: 1.1.1
 homepage: https://github.com/the-best-is-best/tbib_get_timezone_location
 
 environment:
@@ -24,7 +24,7 @@ dependencies:
   path_provider: ^2.1.5
   permission_handler: ^11.3.1
   sqflite: ^2.4.0
-  tbib_timezone_offset: ^1.0.0
+  tbib_timezone_offset: ^1.1.0
 flutter:
   assets:
     - assets/database/time_zone.db

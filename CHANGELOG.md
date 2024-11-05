@@ -1,3 +1,7 @@
+# 1.1.1
+
+- update dep
+
 # 1.1.0
 
 - fix package and update database
