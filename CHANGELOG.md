@@ -1,3 +1,7 @@
+# 1.1.0
+
+- fix package and update database
+
 # 1.0.3
 
 - fix package not request location permission
