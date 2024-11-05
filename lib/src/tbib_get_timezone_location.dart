@@ -27,39 +27,39 @@ class TbibGetTimezoneLocation {
   }
 
   Future<File?> _createDatabase(String dbName) async {
-    var permission = await Permission.storage.isGranted;
-    if (!permission) {
-      await Permission.storage.request();
-    } else {
-      return null;
-    }
-    permission = await Permission.location.isGranted;
-    if (!permission) {
-      await Permission.location.request();
-    }
-    if (!permission) {
+    // If location permission is not required for the database, remove the following block
+    var permission = await Permission.location.request();
+    if (!permission.isGranted) {
       await AppSettings.openAppSettings(type: AppSettingsType.location);
       return null;
     }
-    final documentsDirectory = await getApplicationDocumentsDirectory();
-    final dbPath = join(documentsDirectory.path, 'assets', 'database', dbName);
 
-    final exists = await databaseExists(dbPath);
-    if (!exists) {
-      // Create the directory structure if it does not exist
+    try {
+      // Get the application documents directory
+      final documentsDirectory = await getApplicationDocumentsDirectory();
+      final dbPath = join(documentsDirectory.path, dbName);
+
+      // Check if the database already exists
+      if (await databaseExists(dbPath)) {
+        return File(dbPath); // Return the existing database
+      }
+
+      // Create directory if not exists
       await Directory(dirname(dbPath)).create(recursive: true);
 
-      // Copy the database from the assets folder to the documents directory
+      // Copy the database from assets
       final data =
           await rootBundle.load('packages/tbib_get_timezone_location/$dbName');
-      final List<int> bytes = data.buffer.asUint8List(
-        data.offsetInBytes,
-        data.lengthInBytes,
-      );
-      await File(dbPath).writeAsBytes(bytes);
-    }
+      final bytes =
+          data.buffer.asUint8List(data.offsetInBytes, data.lengthInBytes);
 
-    return File(dbPath);
+      // Write the data to the new file
+      final file = await File(dbPath).writeAsBytes(bytes, flush: true);
+      return file;
+    } catch (e) {
+      print('Error creating database: $e');
+      return null;
+    }
   }
 
   Future<String?> _getUserCountryCode() async {
@@ -79,10 +79,11 @@ class TbibGetTimezoneLocation {
 
   /// get timezone
   Future<String?> getTimezones() async {
-    final permission = await Permission.storage.isGranted &&
-        await Permission.location.isGranted;
+    // if(Platform.isAndroid && )
+    // final permission = await Permission.storage.isGranted &&
+    //     await Permission.location.isGranted;
 
-    if (!permission || dbPath == null) {
+    if (dbPath == null) {
       return null;
     }
 
@@ -98,12 +99,20 @@ class TbibGetTimezoneLocation {
       where: 'country = ?',
       whereArgs: [getUserCountry],
     );
+    final countryCode = countryCodeResult.first['country_code'];
     final result = await db.query(
       'time_zone',
+      limit: 1,
       where: 'country_code = ? AND gmt_offset = ?',
-      whereArgs: [countryCodeResult.first['country_code'], offsetWithSeconds],
+      whereArgs: [countryCode, offsetWithSeconds],
     );
+
     await db.close();
-    return result.first['zone_name'] as String?;
+    try {
+      return result.first['zone_name'] as String?;
+    } catch (e) {
+      log("error $e");
+      return null;
+    }
   }
 }

@@ -28,3 +28,7 @@ migrate_working_dir/
 .dart_tool/
 .packages
 build/
+*.db-journal
+*.lock
+time_zone.sqbpro
+time_zone_old.db
