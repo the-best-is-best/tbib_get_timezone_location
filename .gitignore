@@ -26,15 +26,4 @@ migrate_working_dir/
 /pubspec.lock
 **/doc/api/
 .dart_tool/
-.packages
 build/
-*.db-journal
-*.lock
-time_zone.sqbpro
-time_zone_old.db
-
-.DS_Store
-assets/.DS_Store
-example/ios/Podfile.lock
-example/pubspec.lock
-lib/.DS_Store
